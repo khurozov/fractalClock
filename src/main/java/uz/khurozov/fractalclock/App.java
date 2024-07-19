@@ -9,6 +9,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import uz.khurozov.fractalclock.fx.Clock;
@@ -20,7 +23,12 @@ public class App extends Application {
         Label depthLabel = new Label("Depth");
         Spinner<Integer> depthSpinner = new Spinner<>(0, 7, 3);
         
-        ToolBar toolBar = new ToolBar(depthLabel, depthSpinner);
+        Pane space = new Pane();
+        HBox.setHgrow(space, Priority.SOMETIMES);
+
+        Label timeLabel = new Label();
+
+        ToolBar toolBar = new ToolBar(depthLabel, depthSpinner, space, timeLabel);
         
         Clock clock = new Clock(
                 stage.widthProperty().divide(2),
@@ -28,6 +36,7 @@ public class App extends Application {
                 (DoubleBinding) Bindings.min(stage.widthProperty(), stage.heightProperty().subtract(toolBar.heightProperty())).multiply(0.45),
                 IntegerProperty.readOnlyIntegerProperty(depthSpinner.valueProperty())
         );
+        timeLabel.textProperty().bind(clock.timeTextProperty());
 
         BorderPane mainPane = new BorderPane();
         mainPane.setCenter(clock);

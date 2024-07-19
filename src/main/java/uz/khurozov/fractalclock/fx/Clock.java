@@ -4,8 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.IntegerBinding;
-import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.AnchorPane;
@@ -15,6 +14,7 @@ import java.time.LocalTime;
 
 public class Clock extends AnchorPane {
     private final Timeline timer;
+    private final StringProperty timeTextProperty;
 
     public Clock(
             DoubleBinding centerXProperty,
@@ -49,6 +49,7 @@ public class Clock extends AnchorPane {
 
         IntegerBinding depth = depthProperty.add(0);
 
+        timeTextProperty = new SimpleStringProperty("00:00:00.0");
         timer = new Timeline(new KeyFrame(
                 Duration.millis(100),
                 "timer",
@@ -65,6 +66,8 @@ public class Clock extends AnchorPane {
                     hourAngle.set(hA - 90);
                     mad.set(hA - mA);
                     sad.set(hA - sA);
+                    
+                    timeTextProperty.set(now.toString().substring(0, 10));
                 }
         ));
         timer.setCycleCount(-1);
@@ -109,5 +112,9 @@ public class Clock extends AnchorPane {
 
     public void play() {
         timer.play();
+    }
+    
+    public ReadOnlyStringProperty timeTextProperty() {
+        return timeTextProperty;
     }
 }
